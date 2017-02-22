@@ -1,14 +1,14 @@
 {
   "name": "project",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "start.js",
   "dependencies": {
     "express": "^4.13.4",
     "socket.io": "^1.4.5"
   },
   "devDependencies": {},
   "scripts": {
-    "start": "app.js"
+    "start": "start.js"
   },
   "author": "",
   "license": "ISC",
