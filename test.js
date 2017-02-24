@@ -10,6 +10,8 @@ app.use('/client',express.static(__dirname + '/client'));
  
 serv.listen(port);
 console.log("Server started at " + port);
+
+var chat="";
  
 var SOCKET_LIST = {};
  
@@ -165,7 +167,9 @@ var io = require('socket.io')(serv,{});
 io.sockets.on('connection', function(socket){
     socket.id = Math.random();
     SOCKET_LIST[socket.id] = socket;
-   
+
+    socket.emit('addToChat',chat);
+
     Player.onConnect(socket);
    
     socket.on('disconnect',function(){
@@ -174,6 +178,7 @@ io.sockets.on('connection', function(socket){
     });
     socket.on('sendMsgToServer',function(data){
         var playerName = ("" + socket.id).slice(2,7);
+        chat+=playerName + ': ' + data + "<br>";
         for(var i in SOCKET_LIST){
             SOCKET_LIST[i].emit('addToChat',playerName + ': ' + data);
         }
