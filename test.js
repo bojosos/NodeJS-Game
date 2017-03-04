@@ -1,4 +1,4 @@
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 8192;
 var express = require('express');
 var app = express();
 var serv = require('http').Server(app);
@@ -163,24 +163,35 @@ Bullet.update = function(){
  
 var DEBUG = true;
  
+var USERS = {
+    "bob": "asd",
+    "bob1": "asd1",
+    "bob2": "asd2",
+}
+
+var isValidPassword = function(data){
+    return USERS[data.username]===data.password;
+}
+
 var io = require('socket.io')(serv,{});
 io.sockets.on('connection', function(socket){
     socket.id = Math.random();
     SOCKET_LIST[socket.id] = socket;
 
-    socket.emit('addToChat',chat);
+        Player.onConnect(socket);
+        socket.emit('addToChat',chat);
 
-    Player.onConnect(socket);
-   
     socket.on('disconnect',function(){
         delete SOCKET_LIST[socket.id];
         Player.onDisconnect(socket);
     });
+
     socket.on('sendMsgToServer',function(data){
         var playerName = ("" + socket.id).slice(2,7);
-        chat+=playerName + ': ' + data + "<br>";
+        var msg = playerName + ': ' + data;
+        chat+=msg + "<br>";
         for(var i in SOCKET_LIST){
-            SOCKET_LIST[i].emit('addToChat',playerName + ': ' + data);
+            SOCKET_LIST[i].emit('addToChat',msg);
         }
     });
    

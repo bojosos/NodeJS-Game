@@ -1,49 +1,25 @@
-<div id="signDiv">
-    Username: <input id="signDiv-username" type="text"></input><br>
-    Password: <input id="signDiv-password" type="password"></input>
-    <button id="signDiv-signIn">Sign In</button>
-    <button id="signDiv-signIn">Sign Up</button>
+
+<div id="gameDiv">
+    <div id="chat-text" style="width:500px;height:100px;overflow-y:scroll">
+    </div>
+ 
+    <form id="chat-form">
+        <input id="chat-input" type="text" style="width:500px"></input>
+    </form>
 </div>
-
-<canvas id="ctx" width="500" height="500" style="border:1px solid #000000;"></canvas>
-
-<div id="chat-text" style="width:500px;height:100px;overflow-y:scroll">
-    <div>Hello!</div>
-</div>
-
-<form id="chat-form">
-    <input id="chat-input" type="text" style="width:500px"></input>
-</form>
  
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 <script>
+    var socket = io();
+ 
+    //game
     var chatText = document.getElementById('chat-text');
     var chatInput = document.getElementById('chat-input');
     var chatForm = document.getElementById('chat-form');
-    var ctx = document.getElementById("ctx").getContext("2d");
-    ctx.font = '30px Arial';
+    
    
-    var socket = io();
-       
-    socket.on('newPositions',function(data){
-        ctx.clearRect(0,0,500,500);
-        ctx.fillStype='blue';
-        for(var i = 0 ; i < data.player.length; i++){
-            var rect={
-                x:data.player[i].x-5,
-                y:data.player[i].y-5,
-                w:10,
-                h:10,
-            }
-            ctx.fillRect(rect.x,rect.y,10,10);
-        }
-        ctx.fillStyle='blue';
-        for(var i = 0 ; i < data.bullet.length; i++){
-            ctx.fillRect(data.bullet[i].x-5,data.bullet[i].y-5,10,10);
-        }
-    });
-
     socket.on('addToChat',function(data){
+        console.log(data);
         chatText.innerHTML += '<div>' + data + '</div>';
     });
     socket.on('evalAnswer',function(data){
