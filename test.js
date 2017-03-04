@@ -178,16 +178,8 @@ io.sockets.on('connection', function(socket){
     socket.id = Math.random();
     SOCKET_LIST[socket.id] = socket;
 
-    socket.on('signIn',function(data){
-        console.log(data.username + " " + data.password);
-        if(isValidPassword){
-            socket.emit('signInResponse',{success:true});
-        }else{
-            socket.emit('signInResponse',{success:false});
-        }
         Player.onConnect(socket);
         socket.emit('addToChat',chat);
-    });
 
     socket.on('disconnect',function(){
         delete SOCKET_LIST[socket.id];
@@ -197,7 +189,7 @@ io.sockets.on('connection', function(socket){
     socket.on('sendMsgToServer',function(data){
         var playerName = ("" + socket.id).slice(2,7);
         var msg = playerName + ': ' + data;
-        chat+=msg+ + "<br>";
+        chat+=msg + "<br>";
         for(var i in SOCKET_LIST){
             SOCKET_LIST[i].emit('addToChat',msg);
         }
